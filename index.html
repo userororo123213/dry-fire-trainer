@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101820">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Dry Fire">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>DRY FIRE TRAINER</title>
+<style>
+:root{--bg:#101820;--panel:#192630;--panel2:#223440;--text:#f3f6f8;--muted:#a9bac5;--accent:#d9f36a;--line:#344955;--red:#ff7c72}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+header{padding:22px 18px 16px;background:#0c1319;border-bottom:1px solid var(--line)}.brand{font-size:12px;letter-spacing:2px;color:var(--accent);font-weight:800}.headrow{display:flex;justify-content:space-between;align-items:center;margin-top:5px}h1{font-size:24px;margin:0} .status{font-size:11px;color:var(--muted);border:1px solid var(--line);padding:6px 9px;border-radius:20px}
+nav{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:10px;background:#0c1319;position:sticky;top:0;z-index:5}
+nav button{border:0;background:transparent;color:var(--muted);padding:11px 2px;border-radius:10px;font-size:12px;font-weight:700}nav button.active{background:var(--panel2);color:var(--accent)}
+main{max-width:720px;margin:auto;padding:16px}.view{display:none}.view.active{display:block}.card{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:16px;margin-bottom:13px}
+h2{font-size:17px;margin:0 0 13px}h3{font-size:14px;margin:0 0 8px}.muted{color:var(--muted);font-size:13px;line-height:1.5}
+.timer{font-size:64px;font-weight:800;letter-spacing:-3px;text-align:center;margin:14px 0 2px;font-variant-numeric:tabular-nums}.timerlabel{text-align:center;color:var(--muted);font-size:12px;letter-spacing:1px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:15px 0}.stat{background:var(--panel2);border-radius:12px;padding:12px 6px;text-align:center}.stat strong{display:block;font-size:24px}.stat span{font-size:11px;color:var(--muted)}
+.row{display:flex;gap:9px;align-items:center}.row>*{flex:1}button,.btn{cursor:pointer;border:0;border-radius:12px;padding:13px 14px;font-weight:750;font-size:14px;background:var(--accent);color:#172027}.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}.danger{background:#482b2c;color:#ffd8d5}.small{padding:9px 11px;font-size:12px}
+label{display:block;color:var(--muted);font-size:12px;margin:11px 0 6px}input,select{width:100%;padding:12px;border-radius:10px;background:#101a22;border:1px solid var(--line);color:var(--text);font:inherit}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pill{display:inline-block;background:var(--panel2);padding:5px 9px;border-radius:20px;color:var(--muted);font-size:11px}
+.drill{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}.drill:first-of-type{border-top:0}.drill p{margin:4px 0 0;color:var(--muted);font-size:12px}
+.targetwrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}.target{background:#f4f4f0;color:#111;border-radius:12px;padding:10px;text-align:center}.target svg{width:100%;height:auto;display:block}.targetname{font-weight:800;font-size:13px;margin:5px}
+#log{max-height:180px;overflow:auto;font-size:12px;color:var(--muted);line-height:1.8}
+.notice{border-left:3px solid var(--accent);padding:9px 11px;background:#202f37;border-radius:0 9px 9px 0;font-size:12px;color:var(--muted);line-height:1.5}
+footer{text-align:center;color:#71838e;font-size:11px;padding:20px}
+@media(min-width:600px){main{padding:22px}.timer{font-size:76px}}
+</style>
+</head>
+<body>
+<header><div class="brand">TRAIN SMART · TRAIN SAFE</div><div class="headrow"><h1>DRY FIRE TRAINER</h1><span class="status" id="micStatus">MIKROFON: WYŁ.</span></div></header>
+<nav>
+<button class="active" data-tab="timer">TIMER</button><button data-tab="drills">DRILLE</button><button data-tab="stats">STATYSTYKI</button><button data-tab="targets">TARCZE</button>
+</nav>
+<main>
+<section class="view active" id="timer">
+<div class="card">
+<h2>Timer treningowy</h2>
+<div class="timer" id="clock">00:00.0</div><div class="timerlabel" id="timerState">GOTOWY DO TRENINGU</div>
+<div class="stats">
+<div class="stat"><strong id="shotCount">0</strong><span>WYKRYTE KLIKNIĘCIA</span></div>
+<div class="stat"><strong id="elapsed">0.0</strong><span>SEKUNDY</span></div>
+<div class="stat"><strong id="lastSplit">—</strong><span>OSTATNI ODSTĘP</span></div>
+</div>
+<div class="row"><button id="startBtn">START</button><button class="secondary" id="stopBtn">STOP / RESET</button></div>
+<div class="grid2">
+<div><label>Opóźnienie startu (sek.)</label><input id="delay" type="number" min="0" max="30" step=".5" value="3"></div>
+<div><label>Limit treningu (sek.)</label><input id="limit" type="number" min="5" max="600" value="60"></div>
+</div>
+<div class="row" style="margin-top:10px"><button class="secondary" id="micBtn">WŁĄCZ MIKROFON</button><button class="secondary" id="testBeep">TEST SYGNAŁU</button></div>
+<label>Czułość mikrofonu</label><input id="threshold" type="range" min="3" max="40" value="14"><div class="muted">Próg wykrywania: <span id="thresholdVal">14</span>. Zwiększ, jeśli łapie szumy; zmniejsz, jeśli nie wykrywa kliknięć.</div>
+</div>
+<div class="notice">Używaj wyłącznie w bezpiecznym, kontrolowanym miejscu. Przed treningiem sprawdź rozładowanie broni: usuń amunicję z pomieszczenia, sprawdź komorę i magazynek oraz skieruj lufę w bezpiecznym kierunku. Aplikacja rejestruje dźwięki — może zaliczać również inne głośne kliknięcia.</div>
+</section>
+<section class="view" id="drills">
+<div class="card"><h2>Gotowe drille</h2><p class="muted">Wybierz ćwiczenie. Aplikacja ustawi czas i uruchomi timer po naciśnięciu START.</p>
+<div id="drillList"></div></div>
+<div class="card"><h2>Własny trening</h2><div class="grid2"><div><label>Czas (sek.)</label><input id="customTime" type="number" value="60" min="5" max="600"></div><div><label>Cel kliknięć</label><input id="customShots" type="number" value="10" min="1" max="100"></div></div><button style="width:100%;margin-top:12px" id="customDrill">USTAW WŁASNY TRENING</button></div>
+</section>
+<section class="view" id="stats">
+<div class="card"><h2>Podsumowanie bieżącej sesji</h2><div class="stats"><div class="stat"><strong id="sShots">0</strong><span>KLIKNIĘCIA</span></div><div class="stat"><strong id="sTime">0.0</strong><span>CZAS (S)</span></div><div class="stat"><strong id="sAvg">—</strong><span>ŚREDNI ODSTĘP</span></div></div><h3>Ostatnie zdarzenia</h3><div id="log">Brak zarejestrowanych kliknięć.</div></div>
+<div class="card"><h2>Historia treningów</h2><div id="history" class="muted">Brak zapisanych treningów.</div><button class="secondary small" id="clearHistory" style="margin-top:12px">WYCZYŚĆ HISTORIĘ</button></div>
+</section>
+<section class="view" id="targets">
+<div class="card"><h2>Tarcze treningowe</h2><p class="muted">Proste tarcze do treningu na ekranie. Możesz zapisać grafikę lub wydrukować do PDF.</p><div class="targetwrap" id="targetGrid"></div></div>
+<div class="notice">Tarcze ekranowe służą do ćwiczeń dry fire. Rozmiar na ekranie nie odpowiada określonej skali ani wymiarom tarczy zawodniczej.</div>
+</section>
+</main>
+<footer>DRY FIRE TRAINER · Dane treningowe zapisywane lokalnie na urządzeniu</footer>
+<script>
+const $=id=>document.getElementById(id);
+let audioCtx=null, analyser=null, micStream=null, raf=null, running=false, startedAt=0, elapsedTimer=null, shots=[], lastShot=0, detectorOn=false, armed=false, sessionSaved=false, finalElapsed=0, countdownTimer=null;
+const drills=[
+{name:"Rozgrzewka – pojedyncze kliknięcia",time:60,shots:10,desc:"Spokojne, kontrolowane powtórzenia. Skup się na powtarzalności."},
+{name:"Rytm – odstępy 2 sekundy",time:30,shots:10,desc:"Ćwicz równy rytm i stabilną pozycję."},
+{name:"Seria 5 powtórzeń",time:20,shots:5,desc:"Krótka seria z pełną kontrolą każdego powtórzenia."},
+{name:"Trening koncentracji",time:90,shots:15,desc:"Dłuższa sesja z naciskiem na skupienie i spokojną pracę."}
+];
+function showTab(tab){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===tab));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));}
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+function beep(freq=880,duration=.16){try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();let o=audioCtx.createOscillator(),g=audioCtx.createGain();o.frequency.value=freq;o.type='sine';g.gain.setValueAtTime(.0001,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.25,audioCtx.currentTime+.015);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+duration);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+duration+.02)}catch(e){alert('Nie można odtworzyć sygnału. Dotknij ekranu i spróbuj ponownie.');}}
+function updateStats(){let elapsed=running?(performance.now()-startedAt)/1000:finalElapsed;$('shotCount').textContent=shots.length;$('elapsed').textContent=elapsed.toFixed(1);$('sShots').textContent=shots.length;$('sTime').textContent=elapsed.toFixed(1);let splits=shots.slice(1).map((t,i)=>t-shots[i]);$('lastSplit').textContent=splits.length?splits[splits.length-1].toFixed(2):'—';$('sAvg').textContent=splits.length?(splits.reduce((a,b)=>a+b,0)/splits.length).toFixed(2):'—';$('log').innerHTML=shots.length?shots.map((t,i)=>`${i+1}. kliknięcie — ${t.toFixed(2)} s`).reverse().join('<br>'):'Brak zarejestrowanych kliknięć.';}
+function tick(){if(!running)return;let t=(performance.now()-startedAt)/1000;finalElapsed=t;$('clock').textContent=`${String(Math.floor(t/60)).padStart(2,'0')}:${String(Math.floor(t%60)).padStart(2,'0')}.${Math.floor((t%1)*10)}`;updateStats();if(t>=Number($('limit').value)){finish();}}
+function recordShot(){if(!running||!armed)return;let t=(performance.now()-startedAt)/1000;if(t-lastShot<.22)return;lastShot=t;shots.push(t);updateStats();}
+async function enableMic(){try{if(!navigator.mediaDevices?.getUserMedia)throw new Error('Brak obsługi mikrofonu. Otwórz aplikację przez HTTPS w Safari.');micStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();await audioCtx.resume();let src=audioCtx.createMediaStreamSource(micStream);analyser=audioCtx.createAnalyser();analyser.fftSize=1024;src.connect(analyser);detectorOn=true;$('micStatus').textContent='MIKROFON: WŁ.';$('micBtn').textContent='MIKROFON WŁĄCZONY';detect();}catch(e){alert('Nie udało się uruchomić mikrofonu: '+e.message+'\nSprawdź uprawnienia Safari i połączenie HTTPS.');}}
+function detect(){if(!detectorOn||!analyser)return;let data=new Uint8Array(analyser.fftSize);analyser.getByteTimeDomainData(data);let sum=0;for(let i=0;i<data.length;i++){let v=(data[i]-128)/128;sum+=v*v;}let rms=Math.sqrt(sum/data.length)*100;let threshold=Number($('threshold').value);if(running&&armed&&rms>threshold)recordShot();raf=requestAnimationFrame(detect);}
+function start(){if(running)return;audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();audioCtx.resume();shots=[];lastShot=0;finalElapsed=0;sessionSaved=false;updateStats();let delay=Math.max(0,Number($('delay').value)||0);running=true;armed=false;$('timerState').textContent='PRZYGOTUJ SIĘ…';$('startBtn').disabled=true;startedAt=performance.now()+delay*1000;let wait=()=>{if(!running)return;let remain=startedAt-performance.now();if(remain>0){$('clock').textContent=(remain/1000).toFixed(1);countdownTimer=setTimeout(wait,40)}else{startedAt=performance.now();$('timerState').textContent='TRENING – NASŁUCH';beep(1000,.22);setTimeout(()=>{if(running)armed=true;},350);elapsedTimer=setInterval(tick,70);}};wait();}
+function finish(){if(!running)return;finalElapsed=Math.max(0,(performance.now()-startedAt)/1000);running=false;armed=false;clearInterval(elapsedTimer);$('timerState').textContent='ZAKOŃCZONO';$('startBtn').disabled=false;beep(440,.25);let total=shots.length?shots[shots.length-1]:0;let hist=JSON.parse(localStorage.getItem('dft-history')||'[]');hist.unshift({date:new Date().toLocaleString('pl-PL'),shots:shots.length,time:total.toFixed(1)});localStorage.setItem('dft-history',JSON.stringify(hist.slice(0,20)));renderHistory();updateStats();}
+function reset(){running=false;armed=false;clearInterval(elapsedTimer);clearTimeout(countdownTimer);finalElapsed=0;$('startBtn').disabled=false;$('clock').textContent='00:00.0';$('timerState').textContent='GOTOWY DO TRENINGU';shots=[];updateStats();}
+$('startBtn').onclick=start;$('stopBtn').onclick=()=>{if(running)finish();reset()};$('micBtn').onclick=enableMic;$('testBeep').onclick=()=>beep(880,.18);$('threshold').oninput=e=>$('thresholdVal').textContent=e.target.value;
+function renderDrills(){$('drillList').innerHTML=drills.map((d,i)=>`<div class="drill"><div><b>${d.name}</b><p>${d.desc}</p><span class="pill">${d.time} s · ${d.shots} powtórzeń</span></div><button class="secondary small" onclick="chooseDrill(${i})">WYBIERZ</button></div>`).join('');}
+window.chooseDrill=i=>{$('limit').value=drills[i].time;$('timerState').textContent='USTAWIONO: '+drills[i].name.toUpperCase();showTab('timer');};
+$('customDrill').onclick=()=>{$('limit').value=Math.max(5,Number($('customTime').value)||60);$('timerState').textContent='WŁASNY TRENING · CEL '+$('customShots').value+' KLIKNIĘĆ';showTab('timer');};
+function renderHistory(){let h=JSON.parse(localStorage.getItem('dft-history')||'[]');$('history').innerHTML=h.length?h.map(x=>`<div class="drill"><div>${x.date}</div><b>${x.shots} klik. · ${x.time}s</b></div>`).join(''):'Brak zapisanych treningów.';}
+$('clearHistory').onclick=()=>{if(confirm('Usunąć historię treningów?')){localStorage.removeItem('dft-history');renderHistory();}};
+function targetSvg(type){if(type==='bull')return `<svg viewBox="0 0 220 220"><circle cx="110" cy="110" r="103" fill="white" stroke="#111" stroke-width="2"/>${[85,67,49,31,13].map((r,i)=>`<circle cx="110" cy="110" r="${r}" fill="${i%2?'white':'#111'}" stroke="#111" stroke-width="1"/>`).join('')}<circle cx="110" cy="110" r="4" fill="#d22"/></svg>`;
+if(type==='sil')return `<svg viewBox="0 0 220 220"><path d="M82 12 Q110 0 138 12 L143 65 Q160 77 164 110 L155 195 L65 195 L56 110 Q60 77 77 65Z" fill="#111"/><circle cx="110" cy="60" r="20" fill="white"/><path d="M110 90V180 M75 130H145" stroke="white" stroke-width="2"/></svg>`;
+return `<svg viewBox="0 0 220 220"><rect x="8" y="8" width="204" height="204" fill="white" stroke="#111" stroke-width="2"/><path d="M110 8V212 M8 110H212" stroke="#111" stroke-width="2"/>${[1,2,3,4].map(i=>`<rect x="${8+i*20}" y="${8+i*20}" width="${204-i*40}" height="${204-i*40}" fill="none" stroke="#111" stroke-width="1.5"/>`).join('')}<circle cx="110" cy="110" r="7" fill="#111"/></svg>`}
+const targets=[['Tarcza pierścieniowa','bull'],['Sylwetka treningowa','sil'],['Tarcza geometryczna','geo']];
+$('targetGrid').innerHTML=targets.map(([n,t],i)=>`<div class="target"><div class="targetname">${n}</div>${targetSvg(t)}<button class="small" onclick="downloadTarget(${i})">POBIERZ SVG</button><button class="secondary small" style="margin-top:5px" onclick="printTarget(${i})">DRUKUJ / PDF</button></div>`).join('');
+window.downloadTarget=i=>{let svg=targetSvg(targets[i][1]);let blob=new Blob([svg],{type:'image/svg+xml'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='tarcza-'+(i+1)+'.svg';a.click();URL.revokeObjectURL(a.href);};
+window.printTarget=i=>{let w=window.open('','_blank');if(!w){alert('Zezwól na wyskakujące okna, aby wydrukować tarczę.');return;}w.document.write(`<html><head><title>${targets[i][0]}</title><style>body{display:grid;place-items:center;margin:0;height:100vh}svg{width:90mm;height:90mm}</style></head><body>${targetSvg(targets[i][1])}<script>window.onload=()=>window.print()<\/script></body></html>`);w.document.close();};
+renderDrills();renderHistory();updateStats();
+if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+window.addEventListener('pagehide',()=>{if(micStream)micStream.getTracks().forEach(t=>t.stop());});
+</script>
+</body></html>

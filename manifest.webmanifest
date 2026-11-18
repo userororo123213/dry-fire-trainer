@@ -1,0 +1,15 @@
+{
+  "name": "DRY FIRE TRAINER",
+  "short_name": "Dry Fire",
+  "description": "Osobisty timer i dziennik treningu dry fire",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#101820",
+  "theme_color": "#101820",
+  "icons": [
+    {"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
+    {"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"}
+  ]
+}

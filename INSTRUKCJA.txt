@@ -1,0 +1,33 @@
+DRY FIRE TRAINER – uruchomienie na iPhonie za darmo
+
+WYMAGANE: konto GitHub (bezpłatne) i Safari na iPhonie.
+
+1. Na komputerze wejdź na https://github.com i zaloguj się lub utwórz bezpłatne konto.
+2. Kliknij + (prawy górny róg) -> New repository.
+3. Nazwij repozytorium: dry-fire-trainer
+4. Ustaw Public, zaznacz Add a README file i kliknij Create repository.
+5. W repozytorium kliknij Add file -> Upload files.
+6. Wypakuj ZIP i przeciągnij CAŁĄ ZAWARTOŚĆ folderu (index.html, manifest.webmanifest, sw.js, ikony i instrukcję) do okna GitHub.
+7. Kliknij Commit changes.
+8. Wejdź w Settings -> Pages.
+9. W sekcji Build and deployment wybierz Deploy from a branch.
+10. Branch: main, folder: /(root), kliknij Save.
+11. Poczekaj 1–3 minuty. Adres będzie miał postać:
+    https://TWOJ-LOGIN.github.io/dry-fire-trainer/
+    (TWOJ-LOGIN zastąp swoją nazwą użytkownika GitHub).
+12. Otwórz ten adres na iPhonie w Safari.
+13. Naciśnij ikonę Udostępnij -> Dodaj do ekranu początkowego -> Dodaj.
+
+MIKROFON:
+- Uruchom aplikację z adresu HTTPS (nie z pliku lokalnego ani podglądu pliku).
+- W aplikacji naciśnij WŁĄCZ MIKROFON i zezwól Safari na dostęp.
+- Jeśli odmówiłeś wcześniej: iPhone Ustawienia -> Aplikacje -> Safari -> Mikrofon, ustaw Zapytaj lub Zezwól. Możesz też sprawdzić ustawienia witryny w Safari.
+- Przed treningiem sprawdź działanie przyciskiem TEST SYGNAŁU. Mikrofon wykrywa impulsy dźwiękowe, nie rozpoznaje rodzaju dźwięku; hałas otoczenia może powodować fałszywe wskazania.
+- Najlepiej trzymać iPhone blisko źródła kliknięcia, ale nie bezpośrednio przy nim. Ustaw próg czułości suwakiem.
+- iOS może ograniczać mikrofon po zablokowaniu ekranu lub przełączeniu aplikacji. Podczas treningu pozostaw aplikację na pierwszym planie i ekran włączony.
+
+DANE:
+Historia treningów jest przechowywana lokalnie w pamięci przeglądarki na tym urządzeniu. Nie jest wysyłana na serwer.
+
+BEZPIECZEŃSTWO:
+Trening wyłącznie z bronią całkowicie rozładowaną, po fizycznym sprawdzeniu komory i magazynka, bez amunicji w pomieszczeniu, z lufą skierowaną w bezpiecznym kierunku. Aplikacja nie potwierdza rozładowania broni.
